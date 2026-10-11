@@ -26,15 +26,16 @@ async function pool(items, n, fn) {
 }
 const safe = s => s.replace(/[^A-Za-z0-9._-]/g, "_");
 
-let done = 0, imgs = 0;
+let done = 0, imgs = 0; const missing = {};
 for (const s of sets) {
   const file = `${s.r}_${safe(s.id)}.webp`;
   if (!FORCE && map[s.k] && fs.existsSync("img/" + file) && map[s.k].n === s.ids.length) { done++; continue; }
   const langs = s.r === "j" ? ["ja"] : ["de", "en", "fr", "it", "es"];
-  const urls = {};
+  const urls = {}, diag = [];
   for (const l of langs) {
     if (s.ids.every(id => urls[id])) break;
     const d = await get(`${API}/${l}/sets/${encodeURIComponent(s.id)}`);
+    diag.push([l, d ? (d.cards || []).length : -1, d ? (d.cards || []).filter(c => c.image).length : 0]);
     for (const c of d?.cards || []) if (c.image && !urls[c.localId]) urls[c.localId] = c.image + "/low.webp";
   }
   const ids = s.ids.filter(id => urls[id]);
@@ -44,7 +45,7 @@ for (const s of sets) {
     if (b) try { bufs[k] = await sharp(b).resize(W, H, { fit: "fill" }).toBuffer(); } catch {}
   });
   const ok = ids.map((id, k) => [id, bufs[k]]).filter(x => x[1]);
-  if (!ok.length) { delete map[s.k]; done++; console.log(s.k, "keine Bilder"); continue; }
+  if (!ok.length) { delete map[s.k]; missing[s.k] = diag; done++; console.log(s.k, "keine Bilder"); continue; }
   const rows = Math.ceil(ok.length / COLS);
   await sharp({ create: { width: COLS * W, height: rows * H, channels: 3, background: "#1b2240" } })
     .composite(ok.map(([, b], k) => ({ input: b, left: (k % COLS) * W, top: Math.floor(k / COLS) * H })))
@@ -55,4 +56,5 @@ for (const s of sets) {
   fs.writeFileSync(mapPath, JSON.stringify(map));
 }
 fs.writeFileSync(mapPath, JSON.stringify(map));
+fs.writeFileSync("img/missing.json", JSON.stringify(missing));
 console.log("Fertig, neue Bilder:", imgs);
