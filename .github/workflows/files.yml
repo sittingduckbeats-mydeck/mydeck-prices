@@ -1,0 +1,27 @@
+name: Bilder von URLs abrufen
+on:
+  workflow_dispatch:
+    inputs:
+      files:
+        description: "name=url|name=url"
+        required: true
+permissions:
+  contents: write
+jobs:
+  files:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node fetch-files.mjs
+        env:
+          FILES: ${{ github.event.inputs.files }}
+      - name: Speichern
+        run: |
+          git config user.name "mydeck-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets
+          git diff --cached --quiet || git commit -m "Bilder abgerufen"
+          git push
