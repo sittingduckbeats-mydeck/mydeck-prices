@@ -1,0 +1,27 @@
+name: Creator-Bilder abrufen
+on:
+  workflow_dispatch:
+    inputs:
+      handles:
+        description: "YouTube-Handles, kommagetrennt"
+        default: "Leonhart,PokeRev,TwicebakedJake"
+permissions:
+  contents: write
+jobs:
+  avatars:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node fetch-avatars.mjs
+        env:
+          HANDLES: ${{ github.event.inputs.handles }}
+      - name: Speichern
+        run: |
+          git config user.name "mydeck-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add avatars
+          git diff --cached --quiet || git commit -m "Creator-Bilder aktualisiert"
+          git push
