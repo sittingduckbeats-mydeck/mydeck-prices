@@ -14,9 +14,9 @@ async function get(url, type = "text", tries = 4) {
 function csv(t) { const L = t.trim().split(/\r?\n/), h = L[0].split(","); return L.slice(1).map(l => { const v = l.match(/("([^"]|"")*"|[^,]*)(,|$)/g).map(x => x.replace(/,$/, "").replace(/^"|"$/g, "").replace(/""/g, '"')); const o = {}; h.forEach((k, i) => o[k] = v[i]); return o; }); }
 const sp = csv(await get(`${RAW}/pokeapi/master/data/v2/csv/pokemon_species.csv`));
 const nm = csv(await get(`${RAW}/pokeapi/master/data/v2/csv/pokemon_species_names.csv`));
-const de = {}, en = {};
-for (const r of nm) { if (r.local_language_id === "6") de[r.pokemon_species_id] = r.name; if (r.local_language_id === "9") en[r.pokemon_species_id] = r.name; }
-const list = sp.map(s => [+s.id, de[s.id] || en[s.id] || s.identifier, en[s.id] || s.identifier, +s.generation_id]).sort((a, b) => a[0] - b[0]);
+const de = {}, en = {}, ko = {}, ja = {};
+for (const r of nm) { if (r.local_language_id === "6") de[r.pokemon_species_id] = r.name; if (r.local_language_id === "9") en[r.pokemon_species_id] = r.name; if (r.local_language_id === "3") ko[r.pokemon_species_id] = r.name; if (r.local_language_id === "1") ja[r.pokemon_species_id] = r.name; }
+const list = sp.map(s => [+s.id, de[s.id] || en[s.id] || s.identifier, en[s.id] || s.identifier, +s.generation_id, ko[s.id] || "", ja[s.id] || ""]).sort((a, b) => a[0] - b[0]);
 console.log("Pokémon:", list.length);
 fs.mkdirSync("dex", { recursive: true });
 const bufs = new Array(list.length);
