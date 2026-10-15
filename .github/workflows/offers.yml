@@ -1,0 +1,29 @@
+name: eBay-Angebote abrufen
+on:
+  schedule:
+    - cron: "20 4 * * *"   # täglich 04:20 UTC, vor dem Preis-Update
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  offers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-save sharp@0.33.5
+      - run: node fetch-offers.mjs
+        env:
+          EBAY_CLIENT_ID: ${{ secrets.EBAY_CLIENT_ID }}
+          EBAY_CLIENT_SECRET: ${{ secrets.EBAY_CLIENT_SECRET }}
+      - name: Speichern
+        run: |
+          git config user.name "mydeck-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git pull --rebase || true
+          git add -A offers
+          git diff --cached --quiet || git commit -m "eBay-Angebote $(date -u +%Y-%m-%d)"
+          git push

@@ -1,0 +1,16 @@
+[
+ {"q":"Mew ex 152/128 deutsch","label":"Mew ex · 30 Jahre","src":"deck"},
+ {"q":"Gengar 94/102 30 Jahre","label":"Gengar · Klassische Sammlung","src":"deck"},
+ {"q":"Mega-Zygarde ex 120/088","label":"Mega-Zygarde ex","src":"deck"},
+ {"q":"Mantirps 189/182","label":"Mantirps · Paradoxrift","src":"deck"},
+ {"q":"Bisasam 133/132","label":"Bisasam · Mega-Entwicklung","src":"deck"},
+ {"q":"Glurak ex 199/165","label":"Glurak ex · 151","src":"chase"},
+ {"q":"Nachtara ex 161/131","label":"Nachtara ex · Prismatische Entwicklungen","src":"chase"},
+ {"q":"Pikachu ex 238/191","label":"Pikachu ex · Stürmische Funken","src":"chase"},
+ {"q":"Mega Glurak X ex 125/094","label":"Mega-Glurak X ex · Fatale Flammen","src":"chase"},
+ {"q":"Mew ex 232/091","label":"Mew ex · Paldeas Schicksale","src":"chase"},
+ {"q":"Glurak 4/102 Base Set","label":"Glurak · Base Set","src":"chase"},
+ {"q":"Nachtara VMAX 215/203","label":"Nachtara VMAX · Drachenwandel","src":"chase"},
+ {"q":"Lugia V 186/195","label":"Lugia V · Silberne Sturmwinde","src":"chase"},
+ {"q":"Pikachu 30 Jahre Celebration","label":"Pikachu · 30 Jahre","src":"chase"}
+]
