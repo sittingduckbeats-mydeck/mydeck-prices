@@ -1,0 +1,23 @@
+name: Illustratoren abrufen
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  illus:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node fetch-illus.mjs
+      - name: Speichern
+        run: |
+          git config user.name "mydeck-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git pull --rebase || true
+          git add illus
+          git diff --cached --quiet || git commit -m "Illustratoren aktualisiert"
+          git push
