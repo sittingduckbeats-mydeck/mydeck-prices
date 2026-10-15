@@ -3,7 +3,7 @@
 import fs from "node:fs";
 import crypto from "node:crypto";
 const ID = process.env.EBAY_CLIENT_ID, SECRET = process.env.EBAY_CLIENT_SECRET;
-const PER = 8, MAXQ = 30, CAT = "183454";
+const PER = 8, MAXQ = 25, CAT = "183454";
 fs.mkdirSync("offers/img", { recursive: true });
 const write = o => fs.writeFileSync("offers/feed.json", JSON.stringify(Object.assign({ v: Date.now(), updated: new Date().toISOString(), market: "EBAY_DE" }, o)));
 if (!ID || !SECRET) { write({ configured: false, queries: [], items: [] }); console.log("eBay-Zugang fehlt – Feed bleibt leer."); process.exit(0); }
